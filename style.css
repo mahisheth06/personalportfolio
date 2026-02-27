@@ -7,11 +7,11 @@
 
 :root {
     --primary-color: #ffc1cc;
-    --primary-dark: #b5747a;
+    --primary-dark: #fce4ec;
     --secondary-color: #dd868c;
     --text-dark: #1b0a0a;
     --text-light: #5e4b4b;
-    --bg-light: #ffbccd;
+    --bg-light: #f5bfca;
     --bg-white: #ffffff;
     --border-color: #ff9cb5;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -65,8 +65,7 @@ h1, h2, h3, .logo {
   letter-spacing: -0.02em;         /* Tighter letters look more professional */
   
   /* The Gradient */
-  background: linear-gradient(to right, var(--primary-dark), var(--secondary-color));
-  -webkit-background-clip: text;
+  background: linear-gradient(to right, var(--secondary-color), #f8bbd0);  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   
