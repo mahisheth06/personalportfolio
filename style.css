@@ -208,8 +208,8 @@ h1, h2, h3, .logo {
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--shadow-lg);
-    
+    box-shadow: 0 0 20px rgba(248, 187, 208, 0.4);    
+ 
     /* 3. The Floating Animation */
     animation: float 3s ease-in-out infinite;
 }
