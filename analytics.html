@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analytics — Mahi Sheth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink: #f06292;
+      --pink-light: #fce4ec;
+      --pink-mid: #f48fb1;
+      --pink-dark: #c2185b;
+      --bg: #f5f5f5;
+      --bg2: #ffffff;
+      --text: #1a1a1a;
+      --muted: #888;
+      --border: rgba(240, 98, 146, 0.15);
+      --border-hover: rgba(240, 98, 146, 0.4);
+      --green: #66bb6a;
+      --font-head: 'Playfair Display', serif;
+      --font-body: 'Lato', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: radial-gradient(circle, rgba(240,98,146,0.05) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* NAV — matches main site */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 68px;
+      background: rgba(245,245,245,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--pink); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 0.4rem; align-items: center; }
+    .nav-links a {
+      font-family: var(--font-body);
+      padding: 0.4rem 1rem; border-radius: 6px;
+      font-size: 0.95rem; font-weight: 400;
+      color: var(--text); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--pink); }
+    .nav-links a.active {
+      color: var(--pink);
+      border-bottom: 2px solid var(--pink);
+      border-radius: 0; padding-bottom: 0.15rem;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #f06292 0%, #f8afc6 60%, #fce4ec 100%);
+      padding: 4.5rem 2rem 4rem;
+      text-align: center;
+      position: relative; z-index: 1;
+    }
+    .hero .live-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 100px; padding: 0.3rem 1rem;
+      font-family: var(--font-body); font-size: 0.78rem; font-weight: 700;
+      color: #fff; letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+    .live-dot {
+      width: 7px; height: 7px; background: #fff;
+      border-radius: 50%; animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hero h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700;
+      color: #fff; letter-spacing: -0.01em; margin-bottom: 0.8rem;
+    }
+    .hero p {
+      font-family: var(--font-body); font-size: 1.05rem;
+      color: rgba(255,255,255,0.88); font-weight: 300;
+    }
+    .hero p strong { font-weight: 700; }
+
+    /* MAIN */
+    main {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-heading {
+      font-family: var(--font-head);
+      font-size: 1.9rem; font-weight: 700;
+      text-align: center; margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .section-rule {
+      width: 50px; height: 3px;
+      background: var(--pink); border-radius: 2px;
+      margin: 0 auto 2rem;
+    }
+
+    /* STAT CARDS */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1rem; margin-bottom: 3rem;
+      animation: fadeUp 0.5s ease 0.05s both;
+    }
+    @media (max-width: 720px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+
+    .stat-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.6rem 1.3rem;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .stat-card::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--pink), var(--pink-mid));
+    }
+    .stat-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(240,98,146,0.12);
+    }
+    .stat-card .label {
+      font-family: var(--font-body); font-size: 0.72rem; font-weight: 700;
+      color: var(--muted); letter-spacing: 0.09em; text-transform: uppercase;
+      margin-bottom: 0.55rem;
+    }
+    .stat-card .value {
+      font-family: var(--font-head); font-size: 2.5rem; font-weight: 700;
+      color: var(--pink); line-height: 1; letter-spacing: -0.02em;
+    }
+    .stat-card .sub {
+      font-family: var(--font-body); font-size: 0.72rem;
+      color: var(--muted); margin-top: 0.4rem; font-weight: 300;
+    }
+
+    /* CHARTS */
+    .charts-row {
+      display: grid; grid-template-columns: 1.6fr 1fr;
+      gap: 1rem; margin-bottom: 3rem;
+      animation: fadeUp 0.5s ease 0.1s both;
+    }
+    @media (max-width: 720px) { .charts-row { grid-template-columns: 1fr; } }
+
+    .chart-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.8rem;
+    }
+    .chart-card h3 {
+      font-family: var(--font-head); font-size: 1.2rem;
+      font-weight: 700; margin-bottom: 0.25rem; color: var(--text);
+    }
+    .chart-card p {
+      font-family: var(--font-body); font-size: 0.78rem;
+      color: var(--muted); margin-bottom: 1.3rem; font-weight: 300;
+    }
+    .chart-wrap { position: relative; height: 210px; }
+
+    /* PROJECTS */
+    .projects-section { margin-bottom: 3rem; animation: fadeUp 0.5s ease 0.15s both; }
+
+    .filter-bar {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      margin-bottom: 1.3rem; align-items: center;
+    }
+    .filter-bar input {
+      flex: 1; min-width: 200px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 30px; padding: 0.55rem 1.2rem;
+      font-family: var(--font-body); font-size: 0.88rem; color: var(--text);
+      outline: none; transition: border-color 0.2s;
+    }
+    .filter-bar input:focus { border-color: var(--pink); }
+    .filter-bar input::placeholder { color: var(--muted); }
+
+    .filter-btn {
+      padding: 0.45rem 1.05rem; border-radius: 30px;
+      border: 1px solid var(--border); background: var(--bg2);
+      font-family: var(--font-body); font-size: 0.8rem; font-weight: 400;
+      color: var(--muted); cursor: pointer; transition: all 0.18s;
+    }
+    .filter-btn:hover { border-color: var(--pink); color: var(--pink); }
+    .filter-btn.active { background: var(--pink); color: #fff; border-color: var(--pink); }
+
+    .sort-select {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 30px; padding: 0.48rem 1rem;
+      font-family: var(--font-body); font-size: 0.8rem; color: var(--muted);
+      cursor: pointer; outline: none;
+    }
+
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    }
+    @media (max-width: 900px) { .projects-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 560px) { .projects-grid { grid-template-columns: 1fr; } }
+
+    .repo-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.4rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      text-decoration: none; color: inherit;
+    }
+    .repo-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(240,98,146,0.1);
+    }
+    .repo-card .repo-name {
+      font-family: var(--font-head); font-size: 1rem; font-weight: 700;
+      color: var(--pink);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .repo-card .repo-desc {
+      font-family: var(--font-body); font-size: 0.8rem; color: var(--muted);
+      line-height: 1.55; flex: 1; font-weight: 300;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .repo-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .lang-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .repo-meta span { font-family: var(--font-body); font-size: 0.72rem; color: var(--muted); }
+    .repo-badge {
+      font-family: var(--font-body); font-size: 0.65rem;
+      background: var(--pink-light); color: var(--pink-dark);
+      padding: 0.15rem 0.55rem; border-radius: 100px;
+    }
+    .no-repos {
+      grid-column: 1/-1; text-align: center;
+      font-family: var(--font-body); font-size: 0.9rem; color: var(--muted);
+      padding: 3rem; font-weight: 300;
+    }
+
+    /* STREAKS */
+    .streak-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1rem; margin-bottom: 3rem;
+      animation: fadeUp 0.5s ease 0.2s both;
+    }
+    @media (max-width: 720px) { .streak-row { grid-template-columns: 1fr; } }
+
+    .streak-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.8rem 1.4rem;
+      text-align: center; transition: border-color 0.2s, transform 0.2s;
+    }
+    .streak-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .streak-card .icon { font-size: 1.9rem; margin-bottom: 0.6rem; display: block; }
+    .streak-card .big {
+      font-family: var(--font-head); font-size: 2.6rem; font-weight: 700;
+      color: var(--pink); letter-spacing: -0.03em; line-height: 1;
+    }
+    .streak-card .streak-label {
+      font-family: var(--font-body); font-size: 0.78rem;
+      color: var(--muted); margin-top: 0.4rem; font-weight: 300;
+    }
+
+    /* LANG BARS */
+    .lang-bars { display: flex; flex-direction: column; gap: 0.75rem; }
+    .lang-row { display: flex; align-items: center; gap: 12px; }
+    .lang-name { font-family: var(--font-body); font-size: 0.8rem; width: 86px; color: var(--text); }
+    .lang-bar-bg { flex: 1; height: 8px; background: var(--pink-light); border-radius: 100px; overflow: hidden; }
+    .lang-bar-fill { height: 100%; border-radius: 100px; transition: width 1.1s cubic-bezier(0.4,0,0.2,1); }
+    .lang-pct { font-family: var(--font-body); font-size: 0.72rem; color: var(--muted); width: 36px; text-align: right; }
+
+    /* CTA */
+    .cta-strip {
+      background: linear-gradient(135deg, #f06292 0%, #e91e8c 100%);
+      border-radius: 18px; padding: 2.5rem 2.8rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+      animation: fadeUp 0.5s ease 0.25s both;
+    }
+    .cta-strip h2 {
+      font-family: var(--font-head); font-size: 1.8rem; font-weight: 700; color: #fff;
+    }
+    .cta-strip p {
+      font-family: var(--font-body); font-size: 0.9rem;
+      color: rgba(255,255,255,0.8); margin-top: 0.3rem; font-weight: 300;
+    }
+    .cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .cta-btn {
+      padding: 0.65rem 1.5rem; border-radius: 30px;
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 700;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .cta-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+    .cta-btn.white { background: #fff; color: var(--pink); }
+    .cta-btn.outline { background: rgba(255,255,255,0.15); color: #fff; border: 1.5px solid rgba(255,255,255,0.4); }
+
+    /* LOADING */
+    .loading-overlay {
+      position: fixed; inset: 0; z-index: 999;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1rem;
+    }
+    .loading-overlay.hidden { display: none; }
+    .spinner {
+      width: 42px; height: 42px;
+      border: 3px solid var(--pink-light);
+      border-top-color: var(--pink);
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-overlay .load-title {
+      font-family: var(--font-head); font-size: 1.2rem; color: var(--pink);
+    }
+    .loading-overlay p {
+      font-family: var(--font-body); font-size: 0.85rem;
+      color: var(--muted); font-weight: 300;
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--pink-light) 25%, #fff8fa 50%, var(--pink-light) 75%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    .error-msg {
+      background: #fff5f7; border: 1px solid rgba(240,98,146,0.25);
+      border-radius: 10px; padding: 1rem 1.2rem;
+      font-family: var(--font-body); font-size: 0.85rem; color: var(--pink);
+      margin-bottom: 1.5rem; display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loader">
+  <div class="spinner"></div>
+  <div class="load-title">My Portfolio</div>
+  <p>fetching live github data...</p>
+</div>
+
+<nav>
+  <a class="nav-logo" href="index.html">My Portfolio</a>
+  <div class="nav-links">
+    <a href="index.html#home">Home</a>
+    <a href="index.html#about">About Me</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="analytics.html" class="active">Analytics</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="live-tag"><span class="live-dot"></span> Live GitHub Data</div>
+  <h1>Developer Analytics</h1>
+  <p>Real-time stats for <strong>mahisheth06</strong> · Updated <span id="last-updated">just now</span></p>
+</div>
+
+<main>
+
+  <div class="error-msg" id="error-msg">
+    Could not load GitHub data — API rate limit may be reached. Try again in a minute!
+  </div>
+
+  <!-- OVERVIEW -->
+  <div style="margin-top:0.5rem;">
+    <div class="section-heading">Overview</div>
+    <div class="section-rule"></div>
+  </div>
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card"><div class="label">Public Repos</div><div class="value skeleton" style="height:2.5rem;width:70px;margin:0 auto;">&nbsp;</div></div>
+    <div class="stat-card"><div class="label">Total Stars</div><div class="value skeleton" style="height:2.5rem;width:70px;margin:0 auto;">&nbsp;</div></div>
+    <div class="stat-card"><div class="label">Total Forks</div><div class="value skeleton" style="height:2.5rem;width:70px;margin:0 auto;">&nbsp;</div></div>
+    <div class="stat-card"><div class="label">Followers</div><div class="value skeleton" style="height:2.5rem;width:70px;margin:0 auto;">&nbsp;</div></div>
+  </div>
+
+  <!-- ACTIVITY -->
+  <div class="section-heading">Activity</div>
+  <div class="section-rule"></div>
+  <div class="charts-row">
+    <div class="chart-card">
+      <h3>Commit activity</h3>
+      <p>Weekly commits from public events</p>
+      <div class="chart-wrap"><canvas id="commitChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Top languages</h3>
+      <p>By repo count across all projects</p>
+      <div class="chart-wrap"><canvas id="langChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ALL PROJECTS — above streaks -->
+  <div class="projects-section">
+    <div class="section-heading">All Projects</div>
+    <div class="section-rule"></div>
+    <div class="filter-bar">
+      <input type="text" id="search-input" placeholder="Search repositories..."/>
+      <div id="lang-filters" style="display:flex;gap:0.5rem;flex-wrap:wrap;"></div>
+      <select class="sort-select" id="sort-select">
+        <option value="updated">Recently updated</option>
+        <option value="stars">Most stars</option>
+        <option value="name">A → Z</option>
+        <option value="forks">Most forks</option>
+      </select>
+    </div>
+    <div class="projects-grid" id="projects-grid">
+      <div class="repo-card"><div class="skeleton" style="height:14px;width:55%;border-radius:6px;"></div><div class="skeleton" style="height:10px;width:88%;border-radius:6px;margin-top:10px;"></div></div>
+      <div class="repo-card"><div class="skeleton" style="height:14px;width:55%;border-radius:6px;"></div><div class="skeleton" style="height:10px;width:88%;border-radius:6px;margin-top:10px;"></div></div>
+      <div class="repo-card"><div class="skeleton" style="height:14px;width:55%;border-radius:6px;"></div><div class="skeleton" style="height:10px;width:88%;border-radius:6px;margin-top:10px;"></div></div>
+    </div>
+  </div>
+
+  <!-- LANGUAGE BREAKDOWN — above streaks -->
+  <div class="section-heading">Language Breakdown</div>
+  <div class="section-rule"></div>
+  <div class="chart-card" style="margin-bottom:3rem; animation: fadeUp 0.5s ease 0.2s both;">
+    <h3>Languages used</h3>
+    <p>Across all public repositories</p>
+    <div class="lang-bars" id="lang-bars">
+      <div class="lang-row"><div class="skeleton" style="height:8px;flex:1;border-radius:100px;"></div></div>
+      <div class="lang-row"><div class="skeleton" style="height:8px;flex:1;border-radius:100px;"></div></div>
+      <div class="lang-row"><div class="skeleton" style="height:8px;flex:1;border-radius:100px;"></div></div>
+    </div>
+  </div>
+
+  <!-- STREAKS — below language breakdown -->
+  <div class="section-heading">Streaks & Contributions</div>
+  <div class="section-rule"></div>
+  <div class="streak-row">
+    <div class="streak-card">
+      <span class="icon">🔥</span>
+      <div class="big" id="stat-repos">—</div>
+      <div class="streak-label">public repositories</div>
+    </div>
+    <div class="streak-card">
+      <span class="icon">⭐</span>
+      <div class="big" id="stat-stars">—</div>
+      <div class="streak-label">total stars earned</div>
+    </div>
+    <div class="streak-card">
+      <span class="icon">🍴</span>
+      <div class="big" id="stat-forks">—</div>
+      <div class="streak-label">total forks</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-strip">
+    <div>
+      <h2>Let's work together ✨</h2>
+      <p>Open to quant, backend, and software engineering roles.</p>
+    </div>
+    <div class="cta-buttons">
+      <a class="cta-btn white" href="mailto:your.email@example.com">Email Me</a>
+      <a class="cta-btn outline" href="https://linkedin.com" target="_blank">LinkedIn</a>
+      <a class="cta-btn outline" href="https://github.com/mahisheth06" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const USERNAME = 'mahisheth06';
+const LANG_COLORS = {
+  JavaScript:'#f7df1e', Python:'#3572A5', TypeScript:'#3178c6',
+  Java:'#b07219', 'C++':'#f34b7d', C:'#555555', HTML:'#e34c26',
+  CSS:'#563d7c', Go:'#00ADD8', Rust:'#dea584', Ruby:'#701516',
+  Swift:'#ffac45', Kotlin:'#A97BFF', Shell:'#89e051', default:'#f06292'
+};
+function langColor(l) { return LANG_COLORS[l] || LANG_COLORS.default; }
+let activeFilter = 'All';
+
+async function fetchAll() {
+  try {
+    const [userRes, reposRes, eventsRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${USERNAME}`),
+      fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`),
+      fetch(`https://api.github.com/users/${USERNAME}/events/public?per_page=100`)
+    ]);
+    if (!userRes.ok) throw new Error('rate limit');
+    const user = await userRes.json();
+    const repos = await reposRes.json();
+    const events = await eventsRes.json();
+    window._allRepos = repos;
+    renderStats(user, repos);
+    renderCommitChart(events);
+    renderLangData(repos);
+    renderProjects(repos);
+    document.getElementById('last-updated').textContent =
+      new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('loader').classList.add('hidden');
+  } catch(e) {
+    document.getElementById('loader').classList.add('hidden');
+    document.getElementById('error-msg').style.display = 'block';
+    window._allRepos = [];
+    renderProjects([]);
+  }
+}
+
+function renderStats(user, repos) {
+  const stars = repos.reduce((a,r)=>a+r.stargazers_count,0);
+  const forks = repos.reduce((a,r)=>a+r.forks_count,0);
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="label">Public Repos</div><div class="value">${user.public_repos}</div><div class="sub">on github</div></div>
+    <div class="stat-card"><div class="label">Total Stars</div><div class="value">${stars}</div><div class="sub">across all repos</div></div>
+    <div class="stat-card"><div class="label">Total Forks</div><div class="value">${forks}</div><div class="sub">by the community</div></div>
+    <div class="stat-card"><div class="label">Followers</div><div class="value">${user.followers}</div><div class="sub">following ${user.following}</div></div>
+  `;
+  document.getElementById('stat-repos').textContent = user.public_repos;
+  document.getElementById('stat-stars').textContent = stars;
+  document.getElementById('stat-forks').textContent = forks;
+}
+
+function renderCommitChart(events) {
+  const weeks = {};
+  const now = Date.now();
+  events.forEach(e => {
+    if (e.type === 'PushEvent') {
+      const d = new Date(e.created_at);
+      const week = Math.floor((now - d.getTime()) / (7*24*60*60*1000));
+      if (week < 26) weeks[week] = (weeks[week]||0) + (e.payload.commits?.length||1);
+    }
+  });
+  const data = Array.from({length:26},(_,i)=>weeks[25-i]||0);
+  const labels = data.map((_,i)=>{
+    const d = new Date(); d.setDate(d.getDate()-(25-i)*7);
+    return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  });
+  new Chart(document.getElementById('commitChart'),{
+    type:'bar',
+    data:{labels,datasets:[{data,backgroundColor:'rgba(240,98,146,0.2)',borderColor:'#f06292',borderWidth:1.5,borderRadius:5,hoverBackgroundColor:'rgba(240,98,146,0.45)'}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:'rgba(240,98,146,0.06)'},ticks:{color:'#bbb',font:{family:'Lato',size:10},maxTicksLimit:8}},
+        y:{grid:{color:'rgba(240,98,146,0.06)'},ticks:{color:'#bbb',font:{family:'Lato',size:10}},beginAtZero:true}
+      }}
+  });
+}
+
+function renderLangData(repos) {
+  const counts = {};
+  repos.forEach(r=>{if(r.language) counts[r.language]=(counts[r.language]||0)+1;});
+  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const total = sorted.reduce((a,[,v])=>a+v,0);
+
+  new Chart(document.getElementById('langChart'),{
+    type:'doughnut',
+    data:{labels:sorted.map(([l])=>l),datasets:[{data:sorted.map(([,v])=>v),backgroundColor:sorted.map(([l])=>langColor(l)),borderWidth:0,hoverOffset:8}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+      plugins:{legend:{position:'right',labels:{color:'#888',font:{family:'Lato',size:11},padding:14,boxWidth:10}}}}
+  });
+
+  document.getElementById('lang-bars').innerHTML = sorted.map(([lang,count])=>{
+    const pct = Math.round(count/total*100);
+    return `<div class="lang-row">
+      <span class="lang-name">${lang}</span>
+      <div class="lang-bar-bg"><div class="lang-bar-fill" style="width:0%;background:${langColor(lang)};" data-pct="${pct}"></div></div>
+      <span class="lang-pct">${pct}%</span>
+    </div>`;
+  }).join('');
+  requestAnimationFrame(()=>{
+    document.querySelectorAll('.lang-bar-fill').forEach(el=>{el.style.width=el.dataset.pct+'%';});
+  });
+
+  const langs = ['All',...sorted.map(([l])=>l)];
+  document.getElementById('lang-filters').innerHTML = langs.map(l=>
+    `<button class="filter-btn ${l==='All'?'active':''}" data-lang="${l}">${l}</button>`
+  ).join('');
+  document.getElementById('lang-filters').addEventListener('click',e=>{
+    if (!e.target.classList.contains('filter-btn')) return;
+    activeFilter = e.target.dataset.lang;
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    filterAndRender();
+  });
+}
+
+function renderProjects(repos) {
+  window._allRepos = repos;
+  filterAndRender();
+  document.getElementById('search-input').addEventListener('input',filterAndRender);
+  document.getElementById('sort-select').addEventListener('change',filterAndRender);
+}
+
+function filterAndRender() {
+  const repos = window._allRepos||[];
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const sort = document.getElementById('sort-select').value;
+  let filtered = repos.filter(r=>{
+    const matchLang = activeFilter==='All'||r.language===activeFilter;
+    const matchSearch = !q||r.name.toLowerCase().includes(q)||(r.description||'').toLowerCase().includes(q);
+    return matchLang && matchSearch;
+  });
+  filtered.sort((a,b)=>{
+    if(sort==='stars') return b.stargazers_count-a.stargazers_count;
+    if(sort==='name') return a.name.localeCompare(b.name);
+    if(sort==='forks') return b.forks_count-a.forks_count;
+    return new Date(b.updated_at)-new Date(a.updated_at);
+  });
+  if(filtered.length===0){
+    document.getElementById('projects-grid').innerHTML=`<div class="no-repos">No repositories found — try a different filter! 🌸</div>`;
+    return;
+  }
+  document.getElementById('projects-grid').innerHTML = filtered.map(r=>{
+    const color = langColor(r.language);
+    const updated = new Date(r.updated_at).toLocaleDateString('en-US',{month:'short',year:'numeric'});
+    return `<a class="repo-card" href="${r.html_url}" target="_blank" rel="noopener">
+      <div class="repo-name">${r.name}</div>
+      <div class="repo-desc">${r.description||'No description yet.'}</div>
+      <div class="repo-meta">
+        ${r.language?`<span class="lang-dot" style="background:${color};"></span><span>${r.language}</span>`:''}
+        <span>⭐ ${r.stargazers_count}</span>
+        <span>🍴 ${r.forks_count}</span>
+        ${r.fork?'<span class="repo-badge">fork</span>':''}
+        ${r.archived?'<span class="repo-badge">archived</span>':''}
+      </div>
+      <div style="font-family:var(--font-body);font-size:0.68rem;color:var(--muted);font-weight:300;">Updated ${updated}</div>
+    </a>`;
+  }).join('');
+}
+
+fetchAll();
+</script>
+</body>
+</html>
