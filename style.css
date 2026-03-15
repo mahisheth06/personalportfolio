@@ -60,22 +60,18 @@ h1, h2, h3, .logo {
 }
 
 .logo {
-  font-family: var(--font-heading); /* Uses Playfair */
-  font-size: 1.8rem;               /* Slightly larger for elegance */
-  font-weight: 700;
-  letter-spacing: -0.02em;         /* Tighter letters look more professional */
-  
-  /* The Gradient */
-  background: linear-gradient(to right, var(--secondary-color), #f8bbd0);  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  
-  transition: transform 0.3s ease;
-  cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #f06292;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
 .logo:hover {
-  transform: scale(1.02); /* Subtle lift when hovered */
+    transform: scale(1.02);
 }
 
 .nav-menu {
