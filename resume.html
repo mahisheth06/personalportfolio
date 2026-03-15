@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resume — Mahi Sheth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink: #f06292;
+      --pink-light: #fce4ec;
+      --pink-mid: #f48fb1;
+      --pink-dark: #c2185b;
+      --bg: #f5f5f5;
+      --bg2: #ffffff;
+      --text: #1a1a1a;
+      --muted: #888;
+      --border: rgba(240,98,146,0.15);
+      --border-hover: rgba(240,98,146,0.4);
+      --font-head: 'Playfair Display', serif;
+      --font-body: 'Lato', sans-serif;
+    }
+
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: var(--font-body); min-height: 100vh; overflow-x: hidden;
+    }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: radial-gradient(circle, rgba(240,98,146,0.05) 1px, transparent 1px);
+      background-size: 28px 28px; pointer-events: none; z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 68px;
+      background: rgba(245,245,245,0.95); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: var(--font-head); font-size: 1.4rem; font-weight: 700; color: var(--pink); text-decoration: none; }
+    .nav-links { display: flex; gap: 0.4rem; align-items: center; }
+    .nav-links a {
+      font-family: var(--font-body); padding: 0.4rem 1rem; border-radius: 6px;
+      font-size: 0.95rem; font-weight: 400; color: var(--text); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--pink); }
+    .nav-links a.active { color: var(--pink); border-bottom: 2px solid var(--pink); border-radius: 0; padding-bottom: 0.15rem; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #f06292 0%, #f8afc6 60%, #fce4ec 100%);
+      padding: 4.5rem 2rem 4rem; text-align: center; position: relative; z-index: 1;
+    }
+    .hero h1 { font-family: var(--font-head); font-size: clamp(2.2rem,5vw,3.4rem); font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+    .hero .subtitle { font-family: var(--font-body); font-size: 1.1rem; color: rgba(255,255,255,0.9); font-weight: 300; margin-bottom: 0.4rem; }
+    .hero .meta { font-family: var(--font-body); font-size: 0.88rem; color: rgba(255,255,255,0.75); font-weight: 300; margin-bottom: 1.6rem; }
+    .hero-badges { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
+    .hero-badge {
+      background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 100px; padding: 0.3rem 1rem;
+      font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; color: #fff;
+    }
+
+    /* MAIN */
+    main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+    .section-heading { font-family: var(--font-head); font-size: 1.9rem; font-weight: 700; text-align: center; margin-bottom: 0.5rem; color: var(--text); }
+    .section-rule { width: 50px; height: 3px; background: var(--pink); border-radius: 2px; margin: 0 auto 2.5rem; }
+
+    /* SKILLS */
+    .skills-section { animation: fadeUp 0.5s ease 0.05s both; margin-bottom: 3.5rem; }
+
+    .skills-filter { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.8rem; }
+    .skill-filter-btn {
+      padding: 0.4rem 1.1rem; border-radius: 30px;
+      border: 1px solid var(--border); background: var(--bg2);
+      font-family: var(--font-body); font-size: 0.82rem; color: var(--muted); cursor: pointer; transition: all 0.18s;
+    }
+    .skill-filter-btn:hover { border-color: var(--pink); color: var(--pink); }
+    .skill-filter-btn.active { background: var(--pink); color: #fff; border-color: var(--pink); }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px,1fr)); gap: 1rem; }
+
+    .skill-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 1.3rem 1.4rem;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .skill-card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(240,98,146,0.1); }
+    .skill-card.hidden { display: none; }
+
+    .skill-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; }
+    .skill-name { font-family: var(--font-head); font-size: 1rem; font-weight: 700; color: var(--text); }
+    .skill-tag {
+      font-family: var(--font-body); font-size: 0.65rem; font-weight: 700;
+      background: var(--pink-light); color: var(--pink-dark);
+      padding: 0.18rem 0.6rem; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .skill-bar-bg { width: 100%; height: 7px; background: var(--pink-light); border-radius: 100px; overflow: hidden; margin-bottom: 0.4rem; }
+    .skill-bar-fill {
+      height: 100%; border-radius: 100px;
+      background: linear-gradient(90deg, var(--pink), var(--pink-mid));
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1); width: 0%;
+    }
+    .skill-bottom { display: flex; justify-content: space-between; align-items: center; }
+    .skill-level { font-family: var(--font-body); font-size: 0.72rem; color: var(--muted); }
+    .skill-pct { font-family: var(--font-head); font-size: 0.9rem; font-weight: 700; color: var(--pink); }
+
+    /* TIMELINE */
+    .timeline-section { animation: fadeUp 0.5s ease 0.1s both; margin-bottom: 3.5rem; }
+
+    .timeline-filter { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; }
+
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: ''; position: absolute; left: 7px; top: 0; bottom: 0;
+      width: 2px; background: linear-gradient(to bottom, var(--pink), var(--pink-light));
+      border-radius: 2px;
+    }
+
+    .timeline-group { margin-bottom: 2rem; }
+    .timeline-group.hidden { display: none; }
+
+    .timeline-org {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 0.75rem; position: relative;
+    }
+    .timeline-org::before {
+      content: ''; position: absolute; left: -2rem;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--pink); border: 3px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--pink);
+      flex-shrink: 0;
+    }
+    .org-name { font-family: var(--font-head); font-size: 1.05rem; font-weight: 700; color: var(--text); }
+    .org-type {
+      font-family: var(--font-body); font-size: 0.68rem; font-weight: 700;
+      background: var(--pink-light); color: var(--pink-dark);
+      padding: 0.18rem 0.6rem; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .org-location { font-family: var(--font-body); font-size: 0.78rem; color: var(--muted); font-weight: 300; margin-left: auto; }
+
+    .timeline-roles { margin-left: 0.5rem; border-left: 2px solid var(--pink-light); padding-left: 1.2rem; }
+
+    .timeline-role {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.1rem 1.3rem; margin-bottom: 0.75rem;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .timeline-role::before {
+      content: ''; position: absolute; left: -1.45rem; top: 1.2rem;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--pink-mid); border: 2px solid var(--bg);
+    }
+    .timeline-role:hover { border-color: var(--border-hover); transform: translateX(3px); }
+
+    .role-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+    .role-title { font-family: var(--font-head); font-size: 0.95rem; font-weight: 700; color: var(--pink); }
+    .role-date { font-family: var(--font-body); font-size: 0.72rem; color: var(--muted); font-weight: 300; white-space: nowrap; }
+    .role-bullets { list-style: none; padding: 0; }
+    .role-bullets li {
+      font-family: var(--font-body); font-size: 0.82rem; color: var(--text);
+      line-height: 1.6; font-weight: 300; padding-left: 1rem; position: relative; margin-bottom: 0.25rem;
+    }
+    .role-bullets li::before { content: '·'; position: absolute; left: 0; color: var(--pink); font-size: 1.2rem; line-height: 1.3; }
+
+    /* PROJECTS */
+    .projects-section { animation: fadeUp 0.5s ease 0.15s both; margin-bottom: 3.5rem; }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 1rem; }
+
+    .project-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .project-card:hover { border-color: var(--border-hover); transform: translateY(-3px); box-shadow: 0 10px 28px rgba(240,98,146,0.1); }
+    .project-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+    .project-name { font-family: var(--font-head); font-size: 1.05rem; font-weight: 700; color: var(--pink); }
+    .project-status {
+      font-family: var(--font-body); font-size: 0.65rem; font-weight: 700;
+      padding: 0.18rem 0.6rem; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap;
+    }
+    .status-complete { background: #e8f5e9; color: #2e7d32; }
+    .status-progress { background: #fff8e1; color: #f57f17; }
+    .project-role { font-family: var(--font-body); font-size: 0.78rem; color: var(--muted); font-weight: 700; }
+    .project-desc { font-family: var(--font-body); font-size: 0.82rem; color: var(--text); line-height: 1.6; font-weight: 300; flex: 1; }
+    .project-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .project-tag {
+      font-family: var(--font-body); font-size: 0.68rem;
+      background: var(--pink-light); color: var(--pink-dark);
+      padding: 0.18rem 0.55rem; border-radius: 100px;
+    }
+
+    /* CERTIFICATIONS */
+    .certs-section { animation: fadeUp 0.5s ease 0.2s both; margin-bottom: 3.5rem; }
+    .certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 0.85rem; }
+    .cert-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1rem 1.1rem; display: flex; align-items: center; gap: 0.75rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .cert-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .cert-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .cert-name { font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+
+    /* CTA */
+    .cta-strip {
+      background: linear-gradient(135deg, #f06292 0%, #e91e8c 100%);
+      border-radius: 18px; padding: 2.5rem 2.8rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem; animation: fadeUp 0.5s ease 0.25s both;
+    }
+    .cta-strip h2 { font-family: var(--font-head); font-size: 1.8rem; font-weight: 700; color: #fff; }
+    .cta-strip p { font-family: var(--font-body); font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-top: 0.3rem; font-weight: 300; }
+    .cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .cta-btn {
+      padding: 0.65rem 1.5rem; border-radius: 30px;
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 700;
+      text-decoration: none; cursor: pointer; border: none; transition: transform 0.15s, opacity 0.15s;
+    }
+    .cta-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+    .cta-btn.white { background: #fff; color: var(--pink); }
+    .cta-btn.outline { background: rgba(255,255,255,0.15); color: #fff; border: 1.5px solid rgba(255,255,255,0.4); }
+
+    /* CO-OP BANNER */
+    .coop-banner {
+      background: var(--pink-light); border: 1px solid rgba(240,98,146,0.3);
+      border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 3rem;
+      display: flex; align-items: center; gap: 0.75rem;
+      animation: fadeUp 0.5s ease both;
+    }
+    .coop-banner span { font-size: 1.2rem; }
+    .coop-banner p { font-family: var(--font-body); font-size: 0.88rem; color: var(--pink-dark); font-weight: 700; }
+    .coop-banner small { font-weight: 300; color: var(--muted); display: block; font-size: 0.78rem; margin-top: 0.1rem; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">My Portfolio</a>
+  <div class="nav-links">
+    <a href="index.html#home">Home</a>
+    <a href="index.html#about">About Me</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="resume.html" class="active">Resume</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Mahi H. Sheth</h1>
+  <p class="subtitle">Computer Science · University of Cincinnati · Class of 2030</p>
+  <p class="meta">Cincinnati, OH · shethmi@mail.uc.edu · GPA: 3.1 · Available for Co-op: Fall 2026</p>
+  <div class="hero-badges">
+    <span class="hero-badge">CS Freshman</span>
+    <span class="hero-badge">Python · HTML/CSS</span>
+    <span class="hero-badge">Learning C++ & SQL</span>
+    <span class="hero-badge">Open to Co-op</span>
+  </div>
+</div>
+
+<main>
+
+  <div class="coop-banner">
+    <span>🎯</span>
+    <div>
+      <p>Available for Co-op — Fall 2026</p>
+      <small>Seeking roles in software engineering, backend development, or quant-adjacent fields</small>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="skills-section">
+    <div class="section-heading">Skills</div>
+    <div class="section-rule"></div>
+    <div class="skills-filter">
+      <button class="skill-filter-btn active" data-filter="all">All</button>
+      <button class="skill-filter-btn" data-filter="programming">Programming</button>
+      <button class="skill-filter-btn" data-filter="tools">Tools</button>
+      <button class="skill-filter-btn" data-filter="os">Operating Systems</button>
+    </div>
+    <div class="skills-grid" id="skills-grid">
+
+      <div class="skill-card" data-category="programming">
+        <div class="skill-top"><span class="skill-name">Python</span><span class="skill-tag">Programming</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="75"></div></div>
+        <div class="skill-bottom"><span class="skill-level">Proficient</span><span class="skill-pct">75%</span></div>
+      </div>
+
+      <div class="skill-card" data-category="programming">
+        <div class="skill-top"><span class="skill-name">HTML & CSS</span><span class="skill-tag">Programming</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80"></div></div>
+        <div class="skill-bottom"><span class="skill-level">Proficient</span><span class="skill-pct">80%</span></div>
+      </div>
+
+      <div class="skill-card" data-category="programming">
+        <div class="skill-top"><span class="skill-name">C++</span><span class="skill-tag">Programming</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="30"></div></div>
+        <div class="skill-bottom"><span class="skill-level">Learning</span><span class="skill-pct">30%</span></div>
+      </div>
+
+      <div class="skill-card" data-category="programming">
+        <div class="skill-top"><span class="skill-name">SQL</span><span class="skill-tag">Programming</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="25"></div></div>
+        <div class="skill-bottom"><span class="skill-level">Learning</span><span class="skill-pct">25%</span></div>
+      </div>
+
+      <div class="skill-card" data-category="programming">
+        <div class="skill-top"><span class="skill-name">React</span><span class="skill-tag">Programming</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="40"></div></div>
+        <div class="skill-bottom"><span class="skill-level">Familiar</span><span class="skill-pct">40%</span></div>
+      </div>
+
+      <div class="skill-card" data-category="tools">
+        <div class="skill-top"><span class="skill-name">Git & GitHub</span><span class="skill-tag">Tools</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="70"></div></div>
+        <div class="skill-bottom"><span class="skill-level">Proficient</span><span class="skill-pct">70%</span></div>
+      </div>
+
+      <div class="skill-card" data-category="tools">
+        <div class="skill-top"><span class="skill-name">Figma</span><span class="skill-tag">Tools</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="55"></div></div>
+        <div class="skill-bottom"><span class="skill-level">Familiar</span><span class="skill-pct">55%</span></div>
+      </div>
+
+      <div class="skill-card" data-category="tools">
+        <div class="skill-top"><span class="skill-name">Microsoft Office</span><span class="skill-tag">Tools</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90"></div></div>
+        <div class="skill-bottom"><span class="skill-level">Expert (Certified)</span><span class="skill-pct">90%</span></div>
+      </div>
+
+      <div class="skill-card" data-category="os">
+        <div class="skill-top"><span class="skill-name">macOS & Windows</span><span class="skill-tag">OS</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="85"></div></div>
+        <div class="skill-bottom"><span class="skill-level">Proficient</span><span class="skill-pct">85%</span></div>
+      </div>
+
+      <div class="skill-card" data-category="os">
+        <div class="skill-top"><span class="skill-name">Linux</span><span class="skill-tag">OS</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="50"></div></div>
+        <div class="skill-bottom"><span class="skill-level">Familiar</span><span class="skill-pct">50%</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EXPERIENCE & EDUCATION TIMELINE -->
+  <div class="timeline-section">
+    <div class="section-heading">Experience & Education</div>
+    <div class="section-rule"></div>
+    <div class="skills-filter timeline-filter">
+      <button class="skill-filter-btn active" data-tfilter="all">All</button>
+      <button class="skill-filter-btn" data-tfilter="work">Work</button>
+      <button class="skill-filter-btn" data-tfilter="education">Education</button>
+      <button class="skill-filter-btn" data-tfilter="club">Clubs & Activities</button>
+    </div>
+    <div class="timeline">
+
+      <!-- University of Cincinnati -->
+      <div class="timeline-group" data-tcat="education">
+        <div class="timeline-org">
+          <span class="org-name">University of Cincinnati</span>
+          <span class="org-type">Education</span>
+          <span class="org-location">Cincinnati, OH</span>
+        </div>
+        <div class="timeline-roles">
+          <div class="timeline-role">
+            <div class="role-header">
+              <span class="role-title">B.S. Computer Science — College of Engineering & Applied Sciences</span>
+              <span class="role-date">Aug 2025 – May 2030</span>
+            </div>
+            <ul class="role-bullets">
+              <li>GPA: 3.1 · Expected Graduation: May 2030</li>
+              <li>Relevant Courses: Information Security & Assurance, Engineering Applications, Engineering Design Thinking</li>
+              <li>Available for Co-op: Fall 2026</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CEAS Tribunal -->
+      <div class="timeline-group" data-tcat="club">
+        <div class="timeline-org">
+          <span class="org-name">CEAS Tribunal</span>
+          <span class="org-type">Club</span>
+          <span class="org-location">University of Cincinnati</span>
+        </div>
+        <div class="timeline-roles">
+          <div class="timeline-role">
+            <div class="role-header">
+              <span class="role-title">College of Wide Events Intern</span>
+              <span class="role-date">2025 – Present</span>
+            </div>
+            <ul class="role-bullets">
+              <li>Help organize engineering-wide events with 200+ student attendance per event</li>
+              <li>Coordinated Midterm & Finals Stressless Week breakfasts — free food and study resource events for engineering students</li>
+              <li>Assisted with the Order of the Engineer ceremony, a formal ring-and-dinner tradition for graduating engineering seniors</li>
+              <li>Organized Grad Fest, a graduation day celebration providing senior gift bags and food for the engineering college</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dig In Strategy -->
+      <div class="timeline-group" data-tcat="work">
+        <div class="timeline-org">
+          <span class="org-name">Dig In Strategy</span>
+          <span class="org-type">Work</span>
+          <span class="org-location">Mason, OH</span>
+        </div>
+        <div class="timeline-roles">
+          <div class="timeline-role">
+            <div class="role-header">
+              <span class="role-title">Marketing Intern</span>
+              <span class="role-date">Jan 2025 – May 2025</span>
+            </div>
+            <ul class="role-bullets">
+              <li>Supported real client campaigns for the Live Like Maya Foundation's annual pickleball tournament fundraiser</li>
+              <li>Conducted and recorded a professional interview with Live Like Maya founder Bonnie Collins</li>
+              <li>Produced short-form Instagram promotional videos incorporating interview clips to boost event visibility</li>
+              <li>Wrote feature articles for Dig In Strategy's Builder Community magazine expanding local community awareness</li>
+              <li>Coordinated within a team to meet client deadlines and deliver multi-platform assets across Instagram and print</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comet Savings & Loan -->
+      <div class="timeline-group" data-tcat="work">
+        <div class="timeline-org">
+          <span class="org-name">Comet Savings & Loan Bank</span>
+          <span class="org-type">Work</span>
+          <span class="org-location">Mason, OH</span>
+        </div>
+        <div class="timeline-roles">
+          <div class="timeline-role">
+            <div class="role-header">
+              <span class="role-title">Auditor</span>
+              <span class="role-date">Aug 2024 – May 2025</span>
+            </div>
+            <ul class="role-bullets">
+              <li>Audited income statements, balance sheets, and new account spreadsheets using Excel to verify accuracy</li>
+              <li>Reviewed and validated treasurer reports, improving financial record accuracy by identifying calculation errors</li>
+              <li>Managed 800+ accounts holding $100,000+ ensuring zero errors across deposits, withdrawals, fees, and interest</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bharat FM -->
+      <div class="timeline-group" data-tcat="work">
+        <div class="timeline-org">
+          <span class="org-name">Bharat FM Bollywood Eve</span>
+          <span class="org-type">Work</span>
+          <span class="org-location">Cincinnati, OH</span>
+        </div>
+        <div class="timeline-roles">
+          <div class="timeline-role">
+            <div class="role-header">
+              <span class="role-title">Emcee / Choreographer / Performer</span>
+              <span class="role-date">May 2022 – Jul 2023</span>
+            </div>
+            <ul class="role-bullets">
+              <li>Co-emceed an annual Bollywood cultural event for 1,000+ attendees, managing scripted transitions for 45+ performances</li>
+              <li>Led two dance teams of 25+ performers — designed original choreography, structured rehearsal timelines, and managed cross-team communication</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loveland Magazine -->
+      <div class="timeline-group" data-tcat="work">
+        <div class="timeline-org">
+          <span class="org-name">Loveland Magazine</span>
+          <span class="org-type">Work</span>
+          <span class="org-location">Loveland, OH</span>
+        </div>
+        <div class="timeline-roles">
+          <div class="timeline-role">
+            <div class="role-header">
+              <span class="role-title">Staff Writer — Journalism Internship</span>
+              <span class="role-date">Feb 2020 – Jul 2023</span>
+            </div>
+            <ul class="role-bullets">
+              <li>Researched, crafted, and edited 7+ published articles synthesizing information from multiple verified sources</li>
+              <li>Created 2+ original interview scripts and video story outlines; conducted interviews with Chief of Police Michael Gabrielson and Superintendent Mike Broadwater</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- William Mason High School -->
+      <div class="timeline-group" data-tcat="education">
+        <div class="timeline-org">
+          <span class="org-name">William Mason High School</span>
+          <span class="org-type">Education</span>
+          <span class="org-location">Mason, OH</span>
+        </div>
+        <div class="timeline-roles">
+          <div class="timeline-role">
+            <div class="role-header">
+              <span class="role-title">High School Diploma</span>
+              <span class="role-date">Graduated May 2025</span>
+            </div>
+            <ul class="role-bullets">
+              <li>Relevant Courses: Intro to IT, Computer Programming I, Honors Financial Accounting, Banking & Investments, Honors Microsoft Certification, Principles of Marketing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="projects-section">
+    <div class="section-heading">Projects</div>
+    <div class="section-rule"></div>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-name">Personal Portfolio Website</span>
+          <span class="project-status status-progress">In Progress</span>
+        </div>
+        <div class="project-role">Solo Developer</div>
+        <div class="project-desc">Responsive multi-page personal portfolio built with HTML, CSS, and JavaScript. Features a dynamic project filtering system, live GitHub analytics dashboard pulling from the GitHub API, and an interactive resume with animated skill bars.</div>
+        <div class="project-tags">
+          <span class="project-tag">HTML</span><span class="project-tag">CSS</span>
+          <span class="project-tag">JavaScript</span><span class="project-tag">GitHub API</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-name">Bright Box</span>
+          <span class="project-status status-complete">Completed</span>
+        </div>
+        <div class="project-role">Co-Project Manager · ENED 1020</div>
+        <div class="project-desc">Portable solar-powered charger and light designed for Dhaka, Bangladesh to address electricity shortages affecting 24M+ residents. Features a 20W solar panel, Li-ion battery, provides 5+ hours of lighting and 2–3 smartphone charges per day. Aligns with UN SDG 7 (Affordable Clean Energy). Production cost: ~$23–28/unit.</div>
+        <div class="project-tags">
+          <span class="project-tag">Engineering Design</span><span class="project-tag">Solar Energy</span>
+          <span class="project-tag">UN SDG 7</span><span class="project-tag">Team of 4</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-name">Autonomous Sorting Robot</span>
+          <span class="project-status status-progress">In Progress</span>
+        </div>
+        <div class="project-role">Documentation Lead & Co-Builder · ENED 1022</div>
+        <div class="project-desc">EV3 LEGO robot that autonomously follows a closed-loop path, detects and weighs shredded material, and sorts it to the correct processing station. Uses LabVIEW programming, dual color sensors, touch sensors, and a mechanical arm. Designed to support disaster relief workers by automating hazardous material sorting.</div>
+        <div class="project-tags">
+          <span class="project-tag">LabVIEW</span><span class="project-tag">EV3 Robotics</span>
+          <span class="project-tag">Sensors</span><span class="project-tag">Autonomous Systems</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CERTIFICATIONS -->
+  <div class="certs-section">
+    <div class="section-heading">Certifications</div>
+    <div class="section-rule"></div>
+    <div class="certs-grid">
+      <div class="cert-card"><span class="cert-icon">📊</span><div><div class="cert-name">Microsoft Excel</div><small style="font-size:0.72rem;color:var(--muted);">Associate Certification</small></div></div>
+      <div class="cert-card"><span class="cert-icon">📑</span><div><div class="cert-name">Microsoft Word</div><small style="font-size:0.72rem;color:var(--muted);">Associate Certification</small></div></div>
+      <div class="cert-card"><span class="cert-icon">📩</span><div><div class="cert-name">Microsoft Outlook</div><small style="font-size:0.72rem;color:var(--muted);">Associate Certification</small></div></div>
+      <div class="cert-card"><span class="cert-icon">📽️</span><div><div class="cert-name">Microsoft PowerPoint</div><small style="font-size:0.72rem;color:var(--muted);">Associate Certification</small></div></div>
+      <div class="cert-card"><span class="cert-icon">🗄️</span><div><div class="cert-name">Microsoft Access</div><small style="font-size:0.72rem;color:var(--muted);">Associate Certification</small></div></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-strip">
+    <div>
+      <h2>Let's work together ✨</h2>
+      <p>Open to quant, backend, and software engineering co-ops — Fall 2026.</p>
+    </div>
+    <div class="cta-buttons">
+      <a class="cta-btn white" href="mailto:shethmi@mail.uc.edu">Email Me</a>
+      <a class="cta-btn outline" href="https://linkedin.com/in/mahisheth06/" target="_blank">LinkedIn</a>
+      <a class="cta-btn outline" href="https://github.com/mahisheth06" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Skill filter
+  document.querySelectorAll('.skill-filter-btn[data-filter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.skill-filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('.skill-card').forEach(card => {
+        card.classList.toggle('hidden', filter !== 'all' && card.dataset.category !== filter);
+      });
+    });
+  });
+
+  // Timeline filter
+  document.querySelectorAll('.skill-filter-btn[data-tfilter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.skill-filter-btn[data-tfilter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.tfilter;
+      document.querySelectorAll('.timeline-group').forEach(group => {
+        group.classList.toggle('hidden', filter !== 'all' && group.dataset.tcat !== filter);
+      });
+    });
+  });
+
+  // Animate skill bars on load
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width + '%';
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.skills-grid').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
