@@ -9,7 +9,44 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
-
+    <style>
+        .navbar {
+            background-color: rgba(245,245,245,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(240,98,146,0.15);
+            box-shadow: none;
+        }
+        .logo {
+            font-family: 'Playfair', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #f06292;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background: none;
+            -webkit-text-fill-color: #f06292;
+        }
+        .logo:hover { transform: scale(1.02); }
+        .nav-link {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 400;
+            font-size: 0.95rem;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            transition: color 0.2s;
+        }
+        .nav-link:hover { color: #f06292; }
+        .nav-link.active {
+            color: #f06292;
+            border-bottom: 2px solid #f06292;
+            border-radius: 0;
+            padding-bottom: 0.15rem;
+        }
+        .nav-link::after { display: none; }
+    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -38,9 +75,9 @@
             <h2 class="section-title">About Me</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p>Hello! I'm a passionate developer who loves creating innovative solutions through code. With a strong foundation in web development and a keen eye for design, I specialize in building responsive and user-friendly applications.</p>
-                    <p>My journey in programming has equipped me with skills in various technologies, and I'm always eager to learn and explore new frameworks and tools. I believe in writing clean, maintainable code and creating experiences that make a difference.</p>
-                    <p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or working on personal projects that challenge my creativity and problem-solving skills.</p>
+                    <p>Hi, I'm Mahi — a Computer Science freshman at the University of Cincinnati (Class of 2030) with a passion for building things that actually work and look great doing it.</p>
+                    <p>I work primarily in Python and HTML/CSS, and I'm currently expanding into C++ and SQL. I love combining technical skills with creativity — whether that's building a responsive portfolio, designing a solar-powered device for Dhaka, or programming an autonomous sorting robot.</p>
+                    <p>Outside of code, I've led dance teams of 25+ performers, written published journalism, and organized engineering events for 200+ students. I'm always looking for the next challenge — currently open to co-op opportunities for Fall 2026.</p>
                 </div>
                 <div class="about-image">
                     <div class="image-placeholder">
@@ -164,7 +201,7 @@
             <div class="contact-content">
                 <p class="contact-text">I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
                 <div class="contact-links">
-                    <a href="mailto:your.email@example.com" class="contact-button">
+                    <a href="/cdn-cgi/l/email-protection#a1d8ced4d38fc4ccc0c8cde1c4d9c0ccd1cdc48fc2cecc" class="contact-button">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                             <polyline points="22,6 12,13 2,6"/>
@@ -191,10 +228,8 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 My Portfolio. All rights reserved.</p>
+            <p>&copy; 2026 Mahi Sheth. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <scri
