@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sorting Robot — Mahi Sheth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink: #f06292; --pink-light: #fce4ec; --pink-mid: #f48fb1; --pink-dark: #c2185b;
+      --bg: #f5f5f5; --bg2: #ffffff; --text: #1a1a1a; --muted: #888;
+      --border: rgba(240,98,146,0.15); --border-hover: rgba(240,98,146,0.4);
+      --font-head: 'Playfair Display', serif; --font-body: 'Lato', sans-serif;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: radial-gradient(circle, rgba(240,98,146,0.05) 1px, transparent 1px);
+      background-size: 28px 28px; pointer-events: none; z-index: 0;
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 68px;
+      background: rgba(245,245,245,0.95); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: var(--font-head); font-size: 1.4rem; font-weight: 700; color: var(--pink); text-decoration: none; }
+    .nav-links { display: flex; gap: 0.4rem; align-items: center; }
+    .nav-links a {
+      font-family: var(--font-body); padding: 0.4rem 1rem; border-radius: 6px;
+      font-size: 0.95rem; font-weight: 400; color: var(--text); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--pink); }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 700;
+      color: var(--pink); text-decoration: none;
+      background: var(--pink-light); border: 1px solid rgba(240,98,146,0.2);
+      padding: 0.4rem 1rem; border-radius: 30px; transition: all 0.18s;
+    }
+    .back-btn:hover { background: var(--pink); color: #fff; }
+
+    .hero {
+      background: linear-gradient(135deg, #f06292 0%, #f8afc6 60%, #fce4ec 100%);
+      padding: 4rem 2rem 3.5rem; text-align: center; position: relative; z-index: 1;
+    }
+    .hero .project-label {
+      display: inline-block; background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.4); border-radius: 100px;
+      padding: 0.3rem 1rem; font-family: var(--font-body); font-size: 0.78rem;
+      font-weight: 700; color: #fff; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .in-progress-badge {
+      display: inline-block; background: rgba(255,255,255,0.3);
+      border: 1px solid rgba(255,255,255,0.5); border-radius: 100px;
+      padding: 0.25rem 0.9rem; font-family: var(--font-body); font-size: 0.75rem;
+      font-weight: 700; color: #fff; margin-left: 0.5rem; vertical-align: middle;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    .hero h1 { font-family: var(--font-head); font-size: clamp(2rem,5vw,3.2rem); font-weight: 700; color: #fff; margin-bottom: 0.6rem; }
+    .hero p { font-family: var(--font-body); font-size: 1.05rem; color: rgba(255,255,255,0.88); font-weight: 300; margin-bottom: 1.5rem; }
+    .hero-meta { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
+    .hero-badge {
+      background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 100px; padding: 0.3rem 1rem;
+      font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; color: #fff;
+    }
+
+    main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+    .section-heading { font-family: var(--font-head); font-size: 1.9rem; font-weight: 700; text-align: center; margin-bottom: 0.5rem; color: var(--text); }
+    .section-rule { width: 50px; height: 3px; background: var(--pink); border-radius: 2px; margin: 0 auto 2rem; }
+
+    /* OVERVIEW */
+    .overview-grid {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
+      margin-bottom: 3rem; animation: fadeUp 0.5s ease 0.05s both;
+    }
+    @media (max-width: 700px) { .overview-grid { grid-template-columns: repeat(2,1fr); } }
+    .overview-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.3rem; text-align: center; transition: border-color 0.2s, transform 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .overview-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--pink), var(--pink-mid));
+    }
+    .overview-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .overview-card .icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .overview-card .value { font-family: var(--font-head); font-size: 1.3rem; font-weight: 700; color: var(--pink); }
+    .overview-card .label { font-family: var(--font-body); font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ABOUT */
+    .about-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 16px;
+      padding: 2rem; animation: fadeUp 0.5s ease 0.1s both; margin-bottom: 2rem;
+    }
+    .about-card h3 { font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+    .about-card p { font-family: var(--font-body); font-size: 0.88rem; color: var(--text); line-height: 1.7; font-weight: 300; margin-bottom: 0.75rem; }
+    .about-card p:last-child { margin-bottom: 0; }
+    .highlight { color: var(--pink); font-weight: 700; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+    .info-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
+    .info-card h3 { font-family: var(--font-head); font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+    .info-list { list-style: none; }
+    .info-list li {
+      font-family: var(--font-body); font-size: 0.82rem; color: var(--text);
+      line-height: 1.6; font-weight: 300; padding-left: 1rem; position: relative; margin-bottom: 0.4rem;
+    }
+    .info-list li::before { content: '·'; position: absolute; left: 0; color: var(--pink); font-size: 1.2rem; line-height: 1.3; }
+
+    /* PROGRESS TRACKER */
+    .progress-section {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.8rem; margin-bottom: 2rem; animation: fadeUp 0.5s ease 0.15s both;
+    }
+    .progress-section h3 { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; margin-bottom: 1.3rem; color: var(--text); }
+    .progress-steps { display: flex; flex-direction: column; gap: 0.75rem; }
+    .progress-step { display: flex; align-items: center; gap: 0.9rem; }
+    .step-dot {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700;
+    }
+    .step-dot.done { background: var(--pink); color: #fff; }
+    .step-dot.in-progress { background: #fff8e1; border: 2px solid #f59e0b; color: #f59e0b; }
+    .step-dot.todo { background: var(--bg); border: 2px solid var(--border); color: var(--muted); }
+    .step-text { font-family: var(--font-body); font-size: 0.85rem; color: var(--text); font-weight: 400; }
+    .step-text.muted { color: var(--muted); font-weight: 300; }
+    .step-date { font-family: var(--font-body); font-size: 0.72rem; color: var(--muted); margin-left: auto; font-weight: 300; }
+
+    /* TABS */
+    .tabs-section { animation: fadeUp 0.5s ease 0.2s both; margin-bottom: 3rem; }
+    .tab-bar {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+      margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); padding-bottom: 0.75rem;
+    }
+    .tab-btn {
+      padding: 0.5rem 1.3rem; border-radius: 30px;
+      border: 1px solid var(--border); background: var(--bg2);
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 400;
+      color: var(--muted); cursor: pointer; transition: all 0.18s;
+    }
+    .tab-btn:hover { border-color: var(--pink); color: var(--pink); }
+    .tab-btn.active { background: var(--pink); color: #fff; border-color: var(--pink); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .pdf-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .pdf-wrap iframe { width: 100%; height: 700px; display: block; border: none; }
+    .pdf-header {
+      padding: 1rem 1.4rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .pdf-header h3 { font-family: var(--font-head); font-size: 1rem; font-weight: 700; color: var(--text); }
+    .pdf-download {
+      font-family: var(--font-body); font-size: 0.78rem; font-weight: 700;
+      color: var(--pink); text-decoration: none;
+      background: var(--pink-light); padding: 0.3rem 0.8rem; border-radius: 30px; transition: all 0.18s;
+    }
+    .pdf-download:hover { background: var(--pink); color: #fff; }
+
+    /* CTA */
+    .cta-strip {
+      background: linear-gradient(135deg, #f06292 0%, #e91e8c 100%);
+      border-radius: 18px; padding: 2rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .cta-strip h2 { font-family: var(--font-head); font-size: 1.5rem; font-weight: 700; color: #fff; }
+    .cta-strip p { font-family: var(--font-body); font-size: 0.85rem; color: rgba(255,255,255,0.8); font-weight: 300; margin-top: 0.2rem; }
+    .cta-btn {
+      padding: 0.6rem 1.4rem; border-radius: 30px;
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 700;
+      text-decoration: none; cursor: pointer; border: none; transition: transform 0.15s, opacity 0.15s;
+    }
+    .cta-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+    .cta-btn.white { background: #fff; color: var(--pink); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">My Portfolio</a>
+  <div class="nav-links">
+    <a href="index.html#home">Home</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="resume.html">Resume</a>
+    <a href="resume.html" class="back-btn">← Back to Resume</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="project-label">Engineering Design · ENED 1022 <span class="in-progress-badge">● In Progress</span></div>
+  <h1>Autonomous Sorting Robot</h1>
+  <p>EV3 LEGO robot that autonomously sorts disaster relief materials</p>
+  <div class="hero-meta">
+    <span class="hero-badge">Documentation Lead</span>
+    <span class="hero-badge">Co-Builder</span>
+    <span class="hero-badge">LabVIEW</span>
+    <span class="hero-badge">Team of 3</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <div class="overview-grid">
+    <div class="overview-card">
+      <div class="icon">🤖</div>
+      <div class="value">EV3</div>
+      <div class="label">LEGO Mindstorms</div>
+    </div>
+    <div class="overview-card">
+      <div class="icon">📡</div>
+      <div class="value">4</div>
+      <div class="label">Sensors used</div>
+    </div>
+    <div class="overview-card">
+      <div class="icon">♻️</div>
+      <div class="value">90%</div>
+      <div class="label">Sorting accuracy</div>
+    </div>
+    <div class="overview-card">
+      <div class="icon">⏱️</div>
+      <div class="value">120s</div>
+      <div class="label">Max path time</div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="about-card">
+    <h3>About this project</h3>
+    <p>
+      This project was built for <span class="highlight">ENED 1022 — Engineering Applications</span> at the University of Cincinnati. Our team of three designed and programmed an <span class="highlight">EV3 LEGO Mindstorms robot</span> that autonomously sorts shredded disaster relief materials.
+    </p>
+    <p>
+      The robot follows a closed-loop path using <span class="highlight">two color sensors</span> mounted facing downward, picks up bins of shredded material from a shredder station, uses weight detection to determine material type (organic vs. metal), and transports them to the correct processing station. A <span class="highlight">mechanical arm with two touch sensors</span> handles the picking and placing of bins. The robot then autonomously returns to the shredder station to repeat the process.
+    </p>
+    <p>
+      The goal is to automate the hazardous, repetitive task of sorting disaster debris, allowing <span class="highlight">relief workers to focus resources more effectively</span> without exposing people to dangerous materials or unstable ground.
+    </p>
+  </div>
+
+  <!-- ROLE & TECH -->
+  <div class="two-col">
+    <div class="info-card">
+      <h3>My role</h3>
+      <ul class="info-list">
+        <li>Documentation Lead — maintained all meeting agendas, design notebook, and Gantt chart</li>
+        <li>Co-builder alongside Kritika Dixit — built the physical robot structure</li>
+        <li>Participated in robot programming and sensor testing</li>
+        <li>Authored all written deliverables and project documentation</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>Tech & hardware</h3>
+      <ul class="info-list">
+        <li>LabVIEW — robot programming language</li>
+        <li>2x color sensors (facing downward for line detection)</li>
+        <li>2x touch sensors (on mechanical arm for bin detection)</li>
+        <li>Mechanical arm motor for picking up and moving bins</li>
+        <li>EV3 brick — onboard processing and control</li>
+        <li>Must handle terrain variations up to 2cm height</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PROGRESS TRACKER -->
+  <div class="progress-section">
+    <h3>Project progress</h3>
+    <div class="progress-steps">
+      <div class="progress-step">
+        <div class="step-dot done">✓</div>
+        <span class="step-text">Phase 1 — Design planning & specifications</span>
+        <span class="step-date">Feb 2026</span>
+      </div>
+      <div class="progress-step">
+        <div class="step-dot done">✓</div>
+        <span class="step-text">Build robot & attach sensors</span>
+        <span class="step-date">Feb 20, 2026</span>
+      </div>
+      <div class="progress-step">
+        <div class="step-dot done">✓</div>
+        <span class="step-text">SubTask 1 — Robot follows closed-loop path (all 6 zones passed)</span>
+        <span class="step-date">Feb 2026</span>
+      </div>
+      <div class="progress-step">
+        <div class="step-dot done">✓</div>
+        <span class="step-text">Rebuild robot with dual color sensors & mechanical arm</span>
+        <span class="step-date">Mar 12, 2026</span>
+      </div>
+      <div class="progress-step">
+        <div class="step-dot in-progress">→</div>
+        <span class="step-text">Phase 2 — Program material weight detection & sorting logic</span>
+        <span class="step-date">In progress</span>
+      </div>
+      <div class="progress-step">
+        <div class="step-dot todo">○</div>
+        <span class="step-text muted">Phase 3 — Full autonomous run & final presentation</span>
+        <span class="step-date">Apr 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN NOTEBOOK -->
+  <div class="section-heading">Design Notebook</div>
+  <div class="section-rule"></div>
+  <div class="tabs-section">
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="notebook">Design Notebook</button>
+    </div>
+    <div class="tab-panel active" id="tab-notebook">
+      <div class="pdf-wrap">
+        <div class="pdf-header">
+          <h3>ENED Design Notebook — Team 10.15</h3>
+          <a class="pdf-download" href="ENED_Design_Notebook_Team_10_15.pdf" download>Download PDF</a>
+        </div>
+        <iframe src="ENED_Design_Notebook_Team_10_15.pdf" title="Design Notebook"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 3rem;">
+    <div class="cta-strip">
+      <div>
+        <h2>See more of my work ✨</h2>
+        <p>Check out Bright Box or my full resume.</p>
+      </div>
+      <a class="cta-btn white" href="resume.html">Back to Resume</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
