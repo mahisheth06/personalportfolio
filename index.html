@@ -58,119 +58,166 @@
       <div class="section-heading">My Projects</div>
       <div class="section-rule"></div>
     </div>
-    <div class="projects-grid">
 
-      <div class="project-card" onclick="location.href='project-brightbox.html'">
-        <div class="project-thumb">
-          <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-            <rect width="400" height="200" fill="#fce4ec"/>
-            <rect x="140" y="50" width="120" height="110" rx="14" fill="#f06292" opacity="0.85"/>
-            <rect x="150" y="40" width="100" height="20" rx="6" fill="#f48fb1"/>
-            <circle cx="200" cy="130" r="22" fill="#fff" opacity="0.6"/>
-            <rect x="165" y="95" width="70" height="12" rx="4" fill="#fce4ec" opacity="0.8"/>
-            <circle cx="240" cy="75" r="28" fill="#ffd54f" opacity="0.7"/>
-          </svg>
-        </div>
-        <div class="project-body">
-          <h3>Bright Box ☀️</h3>
-          <p>Portable solar-powered charger & light designed for Dhaka, Bangladesh. Co-Project Manager — aligns with UN SDG 7.</p>
-          <a href="project-brightbox.html" class="project-link">View Project →</a>
-        </div>
-      </div>
+    <style>
+      .home-proj-card {
+        background: var(--bg2); border: 1px solid var(--border);
+        border-radius: 14px; padding: 1.3rem 1.4rem;
+        display: flex; flex-direction: column; gap: 0.6rem;
+        transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+      }
+      .home-proj-card:hover {
+        border-color: var(--border-hover); transform: translateY(-3px);
+        box-shadow: 0 10px 28px rgba(240,98,146,0.1);
+      }
+      .home-proj-name { font-family: var(--font-head); font-size: 1rem; font-weight: 700; color: var(--pink); }
+      .home-proj-status {
+        font-family: var(--font-body); font-size: 0.65rem; font-weight: 700;
+        padding: 0.18rem 0.6rem; border-radius: 100px;
+        text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap;
+      }
+      .status-complete { background: #e8f5e9; color: #2e7d32; }
+      .status-progress { background: #fff8e1; color: #f57f17; }
+      .home-proj-role { font-family: var(--font-body); font-size: 0.78rem; color: var(--muted); font-weight: 700; }
+      .home-proj-desc { font-family: var(--font-body); font-size: 0.82rem; color: var(--text); line-height: 1.6; font-weight: 300; flex: 1; }
+      .home-proj-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+      .home-proj-tag {
+        font-family: var(--font-body); font-size: 0.68rem;
+        background: var(--pink-light); color: var(--pink-dark);
+        padding: 0.18rem 0.55rem; border-radius: 100px;
+      }
+      .home-proj-link { font-family: var(--font-head); font-size: 0.88rem; font-weight: 700; color: var(--pink); }
+      #home-proj-track {
+        display: grid; grid-template-columns: repeat(3,1fr);
+        gap: 1rem;
+      }
+      @media (max-width: 768px) { #home-proj-track { grid-template-columns: 1fr; } }
+    </style>
 
-      <div class="project-card" onclick="location.href='project-robot.html'">
-        <div class="project-thumb">
-          <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-            <rect width="400" height="200" fill="#fce4ec"/>
-            <rect x="130" y="70" width="140" height="90" rx="12" fill="#f48fb1" opacity="0.8"/>
-            <rect x="155" y="85" width="36" height="36" rx="4" fill="#fff" opacity="0.7"/>
-            <rect x="209" y="85" width="36" height="36" rx="4" fill="#fff" opacity="0.7"/>
-            <rect x="155" y="135" width="90" height="12" rx="4" fill="#f06292" opacity="0.6"/>
-            <rect x="110" y="90" width="20" height="50" rx="6" fill="#f06292" opacity="0.7"/>
-            <rect x="270" y="90" width="20" height="50" rx="6" fill="#f06292" opacity="0.7"/>
-            <rect x="150" y="55" width="100" height="20" rx="6" fill="#f06292" opacity="0.6"/>
-          </svg>
-        </div>
-        <div class="project-body">
-          <h3>Autonomous Sorting Robot 🤖</h3>
-          <p>EV3 LEGO robot programmed in LabVIEW to autonomously sort disaster relief materials. Documentation Lead & Co-Builder.</p>
-          <a href="project-robot.html" class="project-link">View Project →</a>
-        </div>
-      </div>
+    <div style="position:relative; margin-bottom: 4rem;">
+      <button id="home-prev" onclick="homeShift(-1)" style="
+        position:absolute; left:-20px; top:50%; transform:translateY(-50%);
+        width:40px; height:40px; border-radius:50%;
+        background:var(--bg2); border:1px solid var(--border);
+        color:var(--pink); font-size:1.2rem; cursor:pointer;
+        display:flex; align-items:center; justify-content:center;
+        box-shadow:0 2px 8px rgba(240,98,146,0.15); z-index:10; transition: opacity 0.2s;
+      ">‹</button>
 
-      <div class="project-card">
-        <div class="project-thumb">
-          <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-            <rect width="400" height="200" fill="#fce4ec"/>
-            <rect x="50" y="50" width="300" height="100" rx="10" fill="#f48fb1" opacity="0.4"/>
-            <rect x="65" y="65" width="120" height="70" rx="8" fill="#f06292" opacity="0.6"/>
-            <rect x="205" y="65" width="130" height="30" rx="6" fill="#f06292" opacity="0.4"/>
-            <rect x="205" y="105" width="130" height="30" rx="6" fill="#f48fb1" opacity="0.6"/>
-          </svg>
-        </div>
-        <div class="project-body">
-          <h3>Personal Portfolio Website</h3>
-          <p>This site! Responsive multi-page portfolio with live GitHub analytics, interactive resume, and filterable project pages.</p>
-          <a href="https://github.com/mahisheth06" target="_blank" class="project-link">View on GitHub →</a>
-        </div>
-      </div>
+      <div id="home-proj-track"></div>
 
-      <div class="project-card">
-        <div class="project-thumb">
-          <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-            <rect width="400" height="200" fill="#fce4ec"/>
-            <circle cx="200" cy="100" r="60" fill="#f48fb1" opacity="0.5"/>
-            <circle cx="200" cy="100" r="35" fill="#f06292" opacity="0.7"/>
-            <rect x="60" y="120" width="40" height="50" rx="4" fill="#f06292" opacity="0.5"/>
-            <rect x="300" y="120" width="40" height="50" rx="4" fill="#f06292" opacity="0.5"/>
-          </svg>
-        </div>
-        <div class="project-body">
-          <h3>E-Commerce Platform</h3>
-          <p>A full-stack e-commerce application with user authentication, product catalog, shopping cart, and payment integration.</p>
-          <a href="https://github.com/mahisheth06" target="_blank" class="project-link">View on GitHub →</a>
-        </div>
-      </div>
-
-      <div class="project-card">
-        <div class="project-thumb">
-          <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-            <rect width="400" height="200" fill="#fce4ec"/>
-            <rect x="60" y="120" width="40" height="55" rx="4" fill="#f06292" opacity="0.9"/>
-            <rect x="120" y="90" width="40" height="85" rx="4" fill="#f48fb1" opacity="0.9"/>
-            <rect x="180" y="65" width="40" height="110" rx="4" fill="#f06292" opacity="0.7"/>
-            <rect x="240" y="100" width="40" height="75" rx="4" fill="#f48fb1" opacity="0.7"/>
-            <rect x="300" y="50" width="40" height="125" rx="4" fill="#f06292" opacity="0.9"/>
-            <polyline points="80,120 140,90 200,65 260,100 320,50" fill="none" stroke="#c2185b" stroke-width="2.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="project-body">
-          <h3>Data Visualization Tool</h3>
-          <p>Interactive data visualization platform for analyzing complex datasets with customizable charts and real-time processing.</p>
-          <a href="https://github.com/mahisheth06" target="_blank" class="project-link">View on GitHub →</a>
-        </div>
-      </div>
-
-      <div class="project-card">
-        <div class="project-thumb">
-          <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-            <rect width="400" height="200" fill="#fce4ec"/>
-            <rect x="50" y="40" width="120" height="30" rx="6" fill="#f06292" opacity="0.8"/>
-            <rect x="50" y="82" width="120" height="30" rx="6" fill="#f48fb1" opacity="0.8"/>
-            <rect x="50" y="124" width="120" height="30" rx="6" fill="#f06292" opacity="0.5"/>
-            <rect x="200" y="40" width="150" height="114" rx="8" fill="#f48fb1" opacity="0.4"/>
-            <rect x="215" y="58" width="120" height="8" rx="4" fill="#f06292" opacity="0.6"/>
-            <rect x="215" y="76" width="90" height="8" rx="4" fill="#f06292" opacity="0.4"/>
-          </svg>
-        </div>
-        <div class="project-body">
-          <h3>Task Management App</h3>
-          <p>Intuitive task management app with drag-and-drop, real-time updates, and collaborative features for team productivity.</p>
-          <a href="https://github.com/mahisheth06" target="_blank" class="project-link">View on GitHub →</a>
-        </div>
-      </div>
-
+      <button id="home-next" onclick="homeShift(1)" style="
+        position:absolute; right:-20px; top:50%; transform:translateY(-50%);
+        width:40px; height:40px; border-radius:50%;
+        background:var(--bg2); border:1px solid var(--border);
+        color:var(--pink); font-size:1.2rem; cursor:pointer;
+        display:flex; align-items:center; justify-content:center;
+        box-shadow:0 2px 8px rgba(240,98,146,0.15); z-index:10; transition: opacity 0.2s;
+      ">›</button>
     </div>
+
+    <div id="home-proj-dots" style="display:flex;justify-content:center;gap:6px;margin-top:-2rem;margin-bottom:3rem;"></div>
+
+    <script>
+      const HOME_PROJECTS = [
+        {
+          name: 'Bright Box ☀️',
+          status: 'Completed', statusClass: 'status-complete',
+          role: 'Co-Project Manager · ENED 1020',
+          desc: 'Portable solar-powered charger & light for Dhaka, Bangladesh. 20W solar panel, Li-ion battery, ~$23–28/unit. Aligns with UN SDG 7.',
+          tags: ['Engineering Design','Solar Energy','UN SDG 7','Team of 4'],
+          link: 'project-brightbox.html'
+        },
+        {
+          name: 'Autonomous Sorting Robot 🤖',
+          status: 'In Progress', statusClass: 'status-progress',
+          role: 'Documentation Lead & Co-Builder · ENED 1022',
+          desc: 'EV3 LEGO robot programmed in LabVIEW to autonomously follow a path, detect material type by weight, and sort disaster relief debris.',
+          tags: ['LabVIEW','EV3 Robotics','Sensors','Autonomous Systems'],
+          link: 'project-robot.html'
+        },
+        {
+          name: 'Personal Portfolio Website',
+          status: 'In Progress', statusClass: 'status-progress',
+          role: 'Solo Developer',
+          desc: 'This site! Responsive multi-page portfolio with live GitHub analytics, interactive resume, filterable projects, and project detail pages.',
+          tags: ['HTML','CSS','JavaScript','GitHub API'],
+          link: 'https://github.com/mahisheth06'
+        },
+        {
+          name: 'E-Commerce Platform',
+          status: 'In Progress', statusClass: 'status-progress',
+          role: 'Solo Developer',
+          desc: 'Full-stack e-commerce application with user authentication, product catalog, shopping cart, and payment integration.',
+          tags: ['HTML','CSS','JavaScript'],
+          link: 'https://github.com/mahisheth06'
+        },
+        {
+          name: 'Data Visualization Tool',
+          status: 'In Progress', statusClass: 'status-progress',
+          role: 'Solo Developer',
+          desc: 'Interactive data visualization platform for analyzing complex datasets with customizable charts and real-time processing.',
+          tags: ['JavaScript','CSS','APIs'],
+          link: 'https://github.com/mahisheth06'
+        },
+        {
+          name: 'Task Management App',
+          status: 'In Progress', statusClass: 'status-progress',
+          role: 'Solo Developer',
+          desc: 'Intuitive task management app with drag-and-drop, real-time updates, and collaborative features for team productivity.',
+          tags: ['HTML','CSS','JavaScript'],
+          link: 'https://github.com/mahisheth06'
+        }
+      ];
+
+      const HOME_PER_PAGE = 6;
+      let homePage = 0;
+
+      function homeTotalPages() {
+        return Math.ceil(HOME_PROJECTS.length / HOME_PER_PAGE);
+      }
+
+      function renderHomeProjects() {
+        const total = homeTotalPages();
+        const start = homePage * HOME_PER_PAGE;
+        const visible = HOME_PROJECTS.slice(start, start + HOME_PER_PAGE);
+
+        document.getElementById('home-proj-track').innerHTML = visible.map(p => `
+          <div class="home-proj-card" onclick="location.href='${p.link}'">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
+              <span class="home-proj-name">${p.name}</span>
+              <span class="home-proj-status ${p.statusClass}">${p.status}</span>
+            </div>
+            <div class="home-proj-role">${p.role}</div>
+            <div class="home-proj-desc">${p.desc}</div>
+            <div class="home-proj-tags">${p.tags.map(t=>`<span class="home-proj-tag">${t}</span>`).join('')}</div>
+            <div class="home-proj-link">View Project →</div>
+          </div>
+        `).join('');
+
+        const dots = document.getElementById('home-proj-dots');
+        dots.innerHTML = Array.from({length: total}, (_,i) => `
+          <div onclick="homeGoTo(${i})" style="
+            width:${i===homePage?'20px':'8px'}; height:8px; border-radius:100px;
+            background:${i===homePage?'var(--pink)':'var(--border-hover)'};
+            cursor:pointer; transition:all 0.3s;
+          "></div>
+        `).join('');
+
+        document.getElementById('home-prev').style.opacity = homePage === 0 ? '0.3' : '1';
+        document.getElementById('home-next').style.opacity = homePage >= total-1 ? '0.3' : '1';
+      }
+
+      function homeShift(dir) {
+        homePage = Math.max(0, Math.min(homeTotalPages()-1, homePage+dir));
+        renderHomeProjects();
+      }
+
+      function homeGoTo(i) { homePage = i; renderHomeProjects(); }
+
+      renderHomeProjects();
+    </script>
 
     <!-- CONTACT -->
     <div id="contact">
@@ -181,6 +228,10 @@
       <h2>Let's work together ✨</h2>
       <p>I'm always open to new opportunities, projects, and conversations.<br/>Feel free to reach out anytime!</p>
       <div class="contact-btns">
+        <a href="mailto:shethmi@mail.uc.edu" class="btn btn-white">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Email Me
+        </a>
         <a href="https://linkedin.com/in/mahisheth06/" target="_blank" class="btn btn-outline">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
           LinkedIn
@@ -190,64 +241,10 @@
           GitHub
         </a>
       </div>
-        <form action="https://formspree.io/f/mnjgbrqa" method="POST" style="
-          margin-top: 2.5rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.9rem;
-          max-width: 480px;
-          width: 100%;
-          margin-left: auto;
-          margin-right: auto;
-        ">
-          <input type="text" name="name" placeholder="Your name" required style="
-            padding: 0.75rem 1.2rem;
-            border-radius: 30px;
-            border: 1.5px solid rgba(255,255,255,0.4);
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-            font-family: 'Lato', sans-serif;
-            font-size: 0.9rem;
-            outline: none;
-          "/>
-          <input type="email" name="email" placeholder="Your email" required style="
-            padding: 0.75rem 1.2rem;
-            border-radius: 30px;
-            border: 1.5px solid rgba(255,255,255,0.4);
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-            font-family: 'Lato', sans-serif;
-            font-size: 0.9rem;
-            outline: none;
-          "/>
-          <textarea name="message" placeholder="Your message" rows="4" required style="
-            padding: 0.75rem 1.2rem;
-            border-radius: 16px;
-            border: 1.5px solid rgba(255,255,255,0.4);
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-            font-family: 'Lato', sans-serif;
-            font-size: 0.9rem;
-            outline: none;
-            resize: vertical;
-          "></textarea>
-          <button type="submit" style="
-            padding: 0.75rem 1.5rem;
-            border-radius: 30px;
-            border: none;
-            background: #fff;
-            color: #f06292;
-            font-family: 'Lato', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.15s, opacity 0.15s;
-          ">Send Message</button>
-        </form>
     </div>
 
   </main>
-  
+
   <footer>
     <p>&copy; 2026 Mahi Sheth. All rights reserved.</p>
   </footer>
