@@ -526,13 +526,6 @@
     <div class="section-heading">Projects</div>
     <div class="section-rule"></div>
 
-    <!-- Filter buttons -->
-    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem;" id="proj-filters">
-      <button class="filter-btn active" data-pfilter="all">All</button>
-      <button class="filter-btn" data-pfilter="Web">Web</button>
-      <button class="filter-btn" data-pfilter="Engineering">Engineering</button>
-      <button class="filter-btn" data-pfilter="Robotics">Robotics</button>
-    </div>
 
     <!-- Carousel wrapper -->
     <div style="position:relative;">
@@ -664,15 +657,7 @@
       renderCarousel();
     }
 
-    // Filter buttons
-    document.getElementById('proj-filters').addEventListener('click', e => {
-      if (!e.target.dataset.pfilter) return;
-      activeFilter = e.target.dataset.pfilter;
-      currentPage = 0;
-      document.querySelectorAll('[data-pfilter]').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      renderCarousel();
-    });
+
 
     renderCarousel();
   </script>
