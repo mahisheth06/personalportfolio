@@ -86,31 +86,23 @@ h1, h2, h3, .logo {
 
 .nav-link {
     text-decoration: none;
-    color: var(--text-dark);
-    font-weight: 500;
-    transition: color 0.3s ease;
-    position: relative;
+    color: #1a1a1a;
+    font-weight: 400;
+    font-size: 0.95rem;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    transition: color 0.2s;
 }
 
-.nav-link:hover,
+.nav-link:hover {
+    color: #f06292;
+}
+
 .nav-link.active {
-    color: var(--primary-color);
-}
-
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    transition: width 0.3s ease;
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-    width: 100%;
+    color: #f06292;
+    border-bottom: 2px solid #f06292;
+    border-radius: 0;
+    padding-bottom: 0.15rem;
 }
 
 /* Home Section */
