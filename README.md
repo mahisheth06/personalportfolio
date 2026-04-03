@@ -1,7 +1,7 @@
 Mahi Sheth — Personal Portfolio
 
 
-A responsive, multi-page personal portfolio website built from scratch using vanilla HTML, CSS, and JavaScript — no frameworks, no templates. Features a live GitHub analytics dashboard powered by the GitHub REST API, an interactive resume with JavaScript-animated skill bars, filterable project pages, and embedded project documentation.
+A responsive, multi-page personal portfolio website built from scratch using vanilla HTML, CSS, and JavaScript. Features a live GitHub analytics dashboard powered by the GitHub REST API, an interactive resume with JavaScript-animated skill bars, filterable project pages, and embedded project documentation.
 
 **Live site:** [mahisheth06.github.io/personalportfolio](https://mahisheth06.github.io/personalportfolio/)
 
