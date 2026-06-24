@@ -565,7 +565,7 @@ async function fetchAll() {
     window._allRepos = repos;
     renderStats(user, repos);
     renderCommitChart(events);
-    renderLangData(repos);
+    await renderLangData(repos);
     renderProjects(repos);
     document.getElementById('last-updated').textContent =
       new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
@@ -618,39 +618,68 @@ function renderCommitChart(events) {
   });
 }
 
-function renderLangData(repos) {
-  const counts = {};
-  repos.forEach(r=>{if(r.language) counts[r.language]=(counts[r.language]||0)+1;});
-  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  const total = sorted.reduce((a,[,v])=>a+v,0);
+async function renderLangData(repos) {
+  // Fetch per-language byte counts for every repo in parallel
+  const langPromises = repos.map(r =>
+    fetch(`https://api.github.com/repos/${USERNAME}/${r.name}/languages`)
+      .then(res => res.ok ? res.json() : {})
+      .catch(() => ({}))
+  );
+  const langResults = await Promise.all(langPromises);
 
-  new Chart(document.getElementById('langChart'),{
-    type:'doughnut',
-    data:{labels:sorted.map(([l])=>l),datasets:[{data:sorted.map(([,v])=>v),backgroundColor:sorted.map(([l])=>langColor(l)),borderWidth:0,hoverOffset:8}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
-      plugins:{legend:{position:'right',labels:{color:'#888',font:{family:'Lato',size:11},padding:14,boxWidth:10}}}}
+  // Sum up bytes per language across all repos
+  const bytes = {};
+  langResults.forEach(langMap => {
+    Object.entries(langMap).forEach(([lang, count]) => {
+      bytes[lang] = (bytes[lang] || 0) + count;
+    });
   });
 
-  document.getElementById('lang-bars').innerHTML = sorted.map(([lang,count])=>{
-    const pct = Math.round(count/total*100);
+  const sorted = Object.entries(bytes).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const total = sorted.reduce((a, [, v]) => a + v, 0);
+
+  // Donut chart
+  new Chart(document.getElementById('langChart'), {
+    type: 'doughnut',
+    data: {
+      labels: sorted.map(([l]) => l),
+      datasets: [{
+        data: sorted.map(([, v]) => v),
+        backgroundColor: sorted.map(([l]) => langColor(l)),
+        borderWidth: 0,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '62%',
+      plugins: { legend: { position: 'right', labels: { color: '#888', font: { family: 'Lato', size: 11 }, padding: 14, boxWidth: 10 } } }
+    }
+  });
+
+  // Language bars
+  document.getElementById('lang-bars').innerHTML = sorted.map(([lang, count]) => {
+    const pct = Math.round(count / total * 100);
     return `<div class="lang-row">
       <span class="lang-name">${lang}</span>
       <div class="lang-bar-bg"><div class="lang-bar-fill" style="width:0%;background:${langColor(lang)};" data-pct="${pct}"></div></div>
       <span class="lang-pct">${pct}%</span>
     </div>`;
   }).join('');
-  requestAnimationFrame(()=>{
-    document.querySelectorAll('.lang-bar-fill').forEach(el=>{el.style.width=el.dataset.pct+'%';});
+
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.lang-bar-fill').forEach(el => { el.style.width = el.dataset.pct + '%'; });
   });
 
-  const langs = ['All',...sorted.map(([l])=>l)];
-  document.getElementById('lang-filters').innerHTML = langs.map(l=>
-    `<button class="filter-btn ${l==='All'?'active':''}" data-lang="${l}">${l}</button>`
+  // Language filter buttons
+  const langs = ['All', ...sorted.map(([l]) => l)];
+  document.getElementById('lang-filters').innerHTML = langs.map(l =>
+    `<button class="filter-btn ${l === 'All' ? 'active' : ''}" data-lang="${l}">${l}</button>`
   ).join('');
-  document.getElementById('lang-filters').addEventListener('click',e=>{
+
+  document.getElementById('lang-filters').addEventListener('click', e => {
     if (!e.target.classList.contains('filter-btn')) return;
     activeFilter = e.target.dataset.lang;
-    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     e.target.classList.add('active');
     filterAndRender();
   });
