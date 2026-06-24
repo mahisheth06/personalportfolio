@@ -542,6 +542,8 @@
 
 <script>
 const USERNAME = 'mahisheth06';
+const TOKEN = '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';
+const HEADERS = { 'Authorization': `Bearer ${TOKEN}` };  
 const LANG_COLORS = {
   JavaScript:'#f7df1e', Python:'#3572A5', TypeScript:'#3178c6',
   Java:'#b07219', 'C++':'#f34b7d', C:'#555555', HTML:'#e34c26',
@@ -554,9 +556,9 @@ let activeFilter = 'All';
 async function fetchAll() {
   try {
     const [userRes, reposRes, eventsRes] = await Promise.all([
-      fetch(`https://api.github.com/users/${USERNAME}`),
-      fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`),
-      fetch(`https://api.github.com/users/${USERNAME}/events/public?per_page=100`)
+      fetch(`https://api.github.com/users/${USERNAME}`, { headers: HEADERS }),
+      fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`, { headers: HEADERS }),
+      fetch(`https://api.github.com/users/${USERNAME}/events/public?per_page=100`, { headers: HEADERS })
     ]);
     if (!userRes.ok) throw new Error('rate limit');
     const user = await userRes.json();
@@ -621,7 +623,7 @@ function renderCommitChart(events) {
 async function renderLangData(repos) {
   // Fetch per-language byte counts for every repo in parallel
   const langPromises = repos.map(r =>
-    fetch(`https://api.github.com/repos/${USERNAME}/${r.name}/languages`)
+    fetch(`https://api.github.com/repos/${USERNAME}/${r.name}/languages`, { headers: HEADERS })
       .then(res => res.ok ? res.json() : {})
       .catch(() => ({}))
   );
